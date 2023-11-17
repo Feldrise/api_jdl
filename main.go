@@ -10,6 +10,7 @@ import (
 	_ "feldrise.com/jdl/docs"
 	"feldrise.com/jdl/game"
 	"feldrise.com/jdl/gamecard"
+	"feldrise.com/jdl/gamemode"
 	"feldrise.com/jdl/group"
 	"github.com/go-chi/chi"
 	"github.com/go-chi/chi/middleware"
@@ -36,6 +37,7 @@ func Routes(configuration *config.Config) *chi.Mux {
 	router.Route("/api/v1", func(r chi.Router) {
 		r.Mount("/games", game.New(configuration).Routes())
 		r.Mount("/games/{gameid}/cards", gamecard.New(configuration).Routes())
+		r.Mount("/games/{gameid}/modes", gamemode.New(configuration).Routes())
 		r.Mount("/groups", group.New(configuration).Routes())
 	})
 

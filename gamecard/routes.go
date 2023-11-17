@@ -13,6 +13,7 @@ func (config *Config) Routes() *chi.Mux {
 	router := chi.NewRouter()
 
 	router.Get("/", config.GetAll)
+	router.Get("/random", config.GetRandom)
 	router.Post("/", config.Create)
 	router.Put("/{id}", config.Update)
 

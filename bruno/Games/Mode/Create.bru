@@ -1,11 +1,11 @@
 meta {
   name: Create
   type: http
-  seq: 2
+  seq: 1
 }
 
 post {
-  url: {{host}}/api/v1/games/1/cards/
+  url: {{host}}/api/v1/games/1/modes
   body: json
   auth: none
 }
@@ -16,6 +16,6 @@ headers {
 
 body:json {
   {
-    "content": "Je n'ai jamais codé cette applicatoin"
+    "name": "Chez Assyane"
   }
 }

@@ -2,6 +2,7 @@ package gamecard
 
 import (
 	"net/http"
+	"strconv"
 
 	"feldrise.com/jdl/errors"
 	"feldrise.com/jdl/group"
@@ -124,4 +125,31 @@ func (config *Config) Update(w http.ResponseWriter, r *http.Request) {
 	config.Database.Save(gameCard)
 
 	render.JSON(w, r, gameCard)
+}
+
+// GetGameCardRandom godoc
+//
+// @Summary Get random game cards
+// @Descripton Get random game cards
+// @ID get-game-cards-random
+// @Tags GameCard
+// @Success 200 {object} []GameCard
+// @Failure 404 {object} ErrResponse
+// @Router /games/{gameid}/cards/random [get]
+func (config *Config) GetRandom(w http.ResponseWriter, r *http.Request) {
+	gameID := chi.URLParam(r, "gameid")
+
+	limitParam := r.URL.Query().Get("limit")
+	limit := 20
+
+	limitParamValue, err := strconv.Atoi(limitParam)
+
+	if err == nil {
+		limit = limitParamValue
+	}
+
+	var gameCards []models.GameCard
+	config.Database.Model(&models.GameCard{}).Where("game_id=?", gameID).Order("rand()").Limit(limit).Find(&gameCards)
+
+	render.JSON(w, r, gameCards)
 }

@@ -1,13 +1,17 @@
 meta {
-  name: GetAll
+  name: Get Random
   type: http
-  seq: 1
+  seq: 4
 }
 
 get {
-  url: {{host}}/api/v1/games/1/cards
+  url: {{host}}/api/v1/games/1/cards/random?limit=20
   body: json
   auth: none
+}
+
+query {
+  limit: 20
 }
 
 headers {
