@@ -72,10 +72,10 @@ func (config *Config) GetAll(w http.ResponseWriter, r *http.Request) {
 // @Description Create a game
 // @ID create-game
 // @Tags Game
-// @Param request body GamePostPayload true "communication's info"
-// @Success 201 {object} Communication
+// @Param request body GamePostPayload true "game's info"
+// @Success 201 {object} Game
 // @Failure 400 {object} ErrResponse
-// @Router /communications/ [post]
+// @Router /games/ [post]
 func (config *Config) Create(w http.ResponseWriter, r *http.Request) {
 	// We bind the data
 	data := &models.GamePostPayload{}

@@ -1,0 +1,348 @@
+definitions:
+  ErrResponse:
+    properties:
+      code:
+        description: application-specific error code
+        type: integer
+      error:
+        description: application-level error message, for debugging
+        type: string
+      status:
+        description: user-level status message
+        type: string
+    type: object
+  Game:
+    properties:
+      created_at:
+        description: creation time of game
+        type: string
+      deleted_at:
+        description: deletation time of game
+        type: string
+      game_cards:
+        description: the game's cards
+        items:
+          $ref: '#/definitions/GameCard'
+        type: array
+      game_modes:
+        description: the game's modes
+        items:
+          $ref: '#/definitions/GameMode'
+        type: array
+      group_id:
+        description: the id of the group the game belongs to
+        type: integer
+      id:
+        description: ID of game
+        type: integer
+      name:
+        description: the game's name
+        type: string
+      type:
+        description: the game's type
+        type: string
+      updated_at:
+        description: updated time of game
+        type: string
+    type: object
+  GameCard:
+    properties:
+      content:
+        description: the card's content
+        type: string
+      created_at:
+        description: creation time of game card
+        type: string
+      deleted_at:
+        description: deletation time of game card
+        type: string
+      game_id:
+        description: the id of the game the card belongs to
+        type: integer
+      id:
+        description: ID of game card
+        type: integer
+      updated_at:
+        description: updated time of game card
+        type: string
+    type: object
+  GameCardPostPutPayload:
+    properties:
+      content:
+        type: string
+    required:
+    - content
+    type: object
+  GameMode:
+    properties:
+      created_at:
+        description: creation time of game mode
+        type: string
+      deleted_at:
+        description: deletation time of game mode
+        type: string
+      game_id:
+        description: ID of the game the mode belongs to
+        type: integer
+      id:
+        description: ID of game mode
+        type: integer
+      mode_cards:
+        description: cards of the mode
+        items:
+          $ref: '#/definitions/ModeCard'
+        type: array
+      name:
+        description: the mode's name
+        type: string
+      updated_at:
+        description: updated time of game mode
+        type: string
+    type: object
+  GameModePostPutPayload:
+    properties:
+      name:
+        type: string
+    required:
+    - name
+    type: object
+  GamePostPayload:
+    properties:
+      name:
+        description: name of the game
+        type: string
+      type:
+        description: the type of the game
+        type: string
+    required:
+    - name
+    - type
+    type: object
+  Group:
+    properties:
+      code:
+        description: the code to join the group
+        type: string
+      created_at:
+        description: creation time of group
+        type: string
+      deleted_at:
+        description: deletation time of group
+        type: string
+      id:
+        description: ID of group
+        type: integer
+      name:
+        description: the name of the group
+        type: string
+      updated_at:
+        description: updated time of group
+        type: string
+    type: object
+  ModeCard:
+    properties:
+      card_id:
+        description: th ID of the corresponding game card
+        type: integer
+      created_at:
+        description: creation time of mode card
+        type: string
+      deleted_at:
+        description: deletation time of mode card
+        type: string
+      game_mode_id:
+        description: the ID of the mode the card belongs to
+        type: integer
+      id:
+        description: ID of mode card
+        type: integer
+      updated_at:
+        description: updated time of mode card
+        type: string
+    type: object
+info:
+  contact: {}
+  title: JDL API
+paths:
+  /games/:
+    get:
+      operationId: get-games
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/Game'
+            type: array
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/ErrResponse'
+      summary: Get all games
+      tags:
+      - Game
+    post:
+      description: Create a game
+      operationId: create-game
+      parameters:
+      - description: game's info
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/GamePostPayload'
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/Game'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/ErrResponse'
+      summary: Create a game
+      tags:
+      - Game
+  /games/{gameid}/cards/:
+    get:
+      operationId: get-game-cards
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/GameCard'
+            type: array
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/ErrResponse'
+      summary: Get all game's cards
+      tags:
+      - GameCard
+    post:
+      description: Create a game card
+      operationId: create-game-card
+      parameters:
+      - description: game card's info
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/GameCardPostPutPayload'
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/GameCard'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/ErrResponse'
+      summary: Create a game card
+      tags:
+      - GameCard
+  /games/{gameid}/cards/{id}:
+    put:
+      description: Update a game card
+      operationId: update-game-card
+      parameters:
+      - description: The id of the card to update
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: game card's info
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/GameCardPostPutPayload'
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/GameCard'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/ErrResponse'
+      summary: update a game card
+      tags:
+      - GameCard
+  /games/{gameid}/modes/:
+    get:
+      operationId: get-game-modes
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/GameMode'
+            type: array
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/ErrResponse'
+      summary: Get all game's modes
+      tags:
+      - GameMode
+    post:
+      description: Create a game mode
+      operationId: create-game-mode
+      parameters:
+      - description: game mode's info
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/GameModePostPutPayload'
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/GameMode'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/ErrResponse'
+      summary: Create a game mode
+      tags:
+      - GameMode
+  /games/{id}:
+    get:
+      operationId: get-a-game
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/Game'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/ErrResponse'
+      summary: Get one game
+      tags:
+      - Game
+  /groups/code/{code}:
+    get:
+      operationId: get-group-from-code
+      parameters:
+      - description: The code of te group to get
+        in: path
+        name: code
+        required: true
+        type: string
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/Group'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/ErrResponse'
+      summary: Get a group from its code
+      tags:
+      - Group
+swagger: "2.0"

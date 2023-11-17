@@ -16,11 +16,11 @@ type GameMode struct {
 
 	Name      string     `json:"name"`                                                             // the mode's name
 	ModeCards []ModeCard `json:"mode_cards"  gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE,"` // cards of the mode
-}
+} // @name GameMode
 
 type GameModePostPutPayload struct {
 	Name *string `json:"name" validate:"required"`
-}
+} // @name GameModePostPutPayload
 
 func (g *GameModePostPutPayload) Bind(r *http.Request) error {
 	if g.Name == nil {

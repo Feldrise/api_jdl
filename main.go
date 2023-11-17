@@ -1,3 +1,4 @@
+// @title JDL API
 package main
 
 import (
@@ -6,6 +7,7 @@ import (
 
 	"feldrise.com/jdl/config"
 	"feldrise.com/jdl/database"
+	_ "feldrise.com/jdl/docs"
 	"feldrise.com/jdl/game"
 	"feldrise.com/jdl/gamecard"
 	"feldrise.com/jdl/group"

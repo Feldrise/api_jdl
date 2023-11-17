@@ -10,4 +10,4 @@ type ModeCard struct {
 
 	GameModeID uint `json:"game_mode_id"` // the ID of the mode the card belongs to
 	CardID     uint `json:"card_id"`      // th ID of the corresponding game card
-}
+} // @name ModeCard

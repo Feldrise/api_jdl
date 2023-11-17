@@ -10,4 +10,4 @@ type Group struct {
 
 	Code string `json:"code"` // the code to join the group
 	Name string `json:"name"` // the name of the group
-}
+} // @name Group

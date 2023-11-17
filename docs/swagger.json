@@ -1,0 +1,511 @@
+{
+    "swagger": "2.0",
+    "info": {
+        "title": "JDL API",
+        "contact": {}
+    },
+    "paths": {
+        "/games/": {
+            "get": {
+                "tags": [
+                    "Game"
+                ],
+                "summary": "Get all games",
+                "operationId": "get-games",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/Game"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/ErrResponse"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Create a game",
+                "tags": [
+                    "Game"
+                ],
+                "summary": "Create a game",
+                "operationId": "create-game",
+                "parameters": [
+                    {
+                        "description": "game's info",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/GamePostPayload"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/Game"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/ErrResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/games/{gameid}/cards/": {
+            "get": {
+                "tags": [
+                    "GameCard"
+                ],
+                "summary": "Get all game's cards",
+                "operationId": "get-game-cards",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/GameCard"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/ErrResponse"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Create a game card",
+                "tags": [
+                    "GameCard"
+                ],
+                "summary": "Create a game card",
+                "operationId": "create-game-card",
+                "parameters": [
+                    {
+                        "description": "game card's info",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/GameCardPostPutPayload"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/GameCard"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/ErrResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/games/{gameid}/cards/{id}": {
+            "put": {
+                "description": "Update a game card",
+                "tags": [
+                    "GameCard"
+                ],
+                "summary": "update a game card",
+                "operationId": "update-game-card",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "The id of the card to update",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "game card's info",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/GameCardPostPutPayload"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/GameCard"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/ErrResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/games/{gameid}/modes/": {
+            "get": {
+                "tags": [
+                    "GameMode"
+                ],
+                "summary": "Get all game's modes",
+                "operationId": "get-game-modes",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/GameMode"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/ErrResponse"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "description": "Create a game mode",
+                "tags": [
+                    "GameMode"
+                ],
+                "summary": "Create a game mode",
+                "operationId": "create-game-mode",
+                "parameters": [
+                    {
+                        "description": "game mode's info",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/GameModePostPutPayload"
+                        }
+                    }
+                ],
+                "responses": {
+                    "201": {
+                        "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/GameMode"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/ErrResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/games/{id}": {
+            "get": {
+                "tags": [
+                    "Game"
+                ],
+                "summary": "Get one game",
+                "operationId": "get-a-game",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/Game"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/ErrResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/groups/code/{code}": {
+            "get": {
+                "tags": [
+                    "Group"
+                ],
+                "summary": "Get a group from its code",
+                "operationId": "get-group-from-code",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "The code of te group to get",
+                        "name": "code",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/Group"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/ErrResponse"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "definitions": {
+        "ErrResponse": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "description": "application-specific error code",
+                    "type": "integer"
+                },
+                "error": {
+                    "description": "application-level error message, for debugging",
+                    "type": "string"
+                },
+                "status": {
+                    "description": "user-level status message",
+                    "type": "string"
+                }
+            }
+        },
+        "Game": {
+            "type": "object",
+            "properties": {
+                "created_at": {
+                    "description": "creation time of game",
+                    "type": "string"
+                },
+                "deleted_at": {
+                    "description": "deletation time of game",
+                    "type": "string"
+                },
+                "game_cards": {
+                    "description": "the game's cards",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/GameCard"
+                    }
+                },
+                "game_modes": {
+                    "description": "the game's modes",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/GameMode"
+                    }
+                },
+                "group_id": {
+                    "description": "the id of the group the game belongs to",
+                    "type": "integer"
+                },
+                "id": {
+                    "description": "ID of game",
+                    "type": "integer"
+                },
+                "name": {
+                    "description": "the game's name",
+                    "type": "string"
+                },
+                "type": {
+                    "description": "the game's type",
+                    "type": "string"
+                },
+                "updated_at": {
+                    "description": "updated time of game",
+                    "type": "string"
+                }
+            }
+        },
+        "GameCard": {
+            "type": "object",
+            "properties": {
+                "content": {
+                    "description": "the card's content",
+                    "type": "string"
+                },
+                "created_at": {
+                    "description": "creation time of game card",
+                    "type": "string"
+                },
+                "deleted_at": {
+                    "description": "deletation time of game card",
+                    "type": "string"
+                },
+                "game_id": {
+                    "description": "the id of the game the card belongs to",
+                    "type": "integer"
+                },
+                "id": {
+                    "description": "ID of game card",
+                    "type": "integer"
+                },
+                "updated_at": {
+                    "description": "updated time of game card",
+                    "type": "string"
+                }
+            }
+        },
+        "GameCardPostPutPayload": {
+            "type": "object",
+            "required": [
+                "content"
+            ],
+            "properties": {
+                "content": {
+                    "type": "string"
+                }
+            }
+        },
+        "GameMode": {
+            "type": "object",
+            "properties": {
+                "created_at": {
+                    "description": "creation time of game mode",
+                    "type": "string"
+                },
+                "deleted_at": {
+                    "description": "deletation time of game mode",
+                    "type": "string"
+                },
+                "game_id": {
+                    "description": "ID of the game the mode belongs to",
+                    "type": "integer"
+                },
+                "id": {
+                    "description": "ID of game mode",
+                    "type": "integer"
+                },
+                "mode_cards": {
+                    "description": "cards of the mode",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/ModeCard"
+                    }
+                },
+                "name": {
+                    "description": "the mode's name",
+                    "type": "string"
+                },
+                "updated_at": {
+                    "description": "updated time of game mode",
+                    "type": "string"
+                }
+            }
+        },
+        "GameModePostPutPayload": {
+            "type": "object",
+            "required": [
+                "name"
+            ],
+            "properties": {
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
+        "GamePostPayload": {
+            "type": "object",
+            "required": [
+                "name",
+                "type"
+            ],
+            "properties": {
+                "name": {
+                    "description": "name of the game",
+                    "type": "string"
+                },
+                "type": {
+                    "description": "the type of the game",
+                    "type": "string"
+                }
+            }
+        },
+        "Group": {
+            "type": "object",
+            "properties": {
+                "code": {
+                    "description": "the code to join the group",
+                    "type": "string"
+                },
+                "created_at": {
+                    "description": "creation time of group",
+                    "type": "string"
+                },
+                "deleted_at": {
+                    "description": "deletation time of group",
+                    "type": "string"
+                },
+                "id": {
+                    "description": "ID of group",
+                    "type": "integer"
+                },
+                "name": {
+                    "description": "the name of the group",
+                    "type": "string"
+                },
+                "updated_at": {
+                    "description": "updated time of group",
+                    "type": "string"
+                }
+            }
+        },
+        "ModeCard": {
+            "type": "object",
+            "properties": {
+                "card_id": {
+                    "description": "th ID of the corresponding game card",
+                    "type": "integer"
+                },
+                "created_at": {
+                    "description": "creation time of mode card",
+                    "type": "string"
+                },
+                "deleted_at": {
+                    "description": "deletation time of mode card",
+                    "type": "string"
+                },
+                "game_mode_id": {
+                    "description": "the ID of the mode the card belongs to",
+                    "type": "integer"
+                },
+                "id": {
+                    "description": "ID of mode card",
+                    "type": "integer"
+                },
+                "updated_at": {
+                    "description": "updated time of mode card",
+                    "type": "string"
+                }
+            }
+        }
+    }
+}

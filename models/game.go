@@ -18,7 +18,7 @@ type Game struct {
 	Type      string     `json:"type"`                                                             // the game's type
 	GameCards []GameCard `json:"game_cards"  gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE,"` // the game's cards
 	GameModes []GameMode `json:"game_modes"  gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE,"` // the game's modes
-}
+} // @name Game
 
 type GamePostPayload struct {
 	Name *string `json:"name" validate:"required"` // name of the game

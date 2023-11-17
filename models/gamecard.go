@@ -15,11 +15,11 @@ type GameCard struct {
 	GameID uint `json:"game_id"` // the id of the game the card belongs to
 
 	Content string `json:"content"` // the card's content
-}
+} // @name GameCard
 
 type GameCardPostPutPayload struct {
 	Content *string `json:"content" validate:"required"`
-}
+} // @name GameCardPostPutPayload
 
 func (g *GameCardPostPutPayload) Bind(r *http.Request) error {
 	if g.Content == nil {
