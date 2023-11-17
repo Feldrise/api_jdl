@@ -1,0 +1,22 @@
+meta {
+  name: Create
+  type: http
+  seq: 1
+}
+
+post {
+  url: {{host}}/api/v1/games/
+  body: json
+  auth: none
+}
+
+headers {
+  JDLGroupCode: PTSIJ
+}
+
+body:json {
+  {
+    "name": "Je n'ai jamais j'ai déjà",
+    "type": "cards"
+  }
+}

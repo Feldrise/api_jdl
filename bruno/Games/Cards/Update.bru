@@ -1,0 +1,21 @@
+meta {
+  name: Update
+  type: http
+  seq: 3
+}
+
+put {
+  url: {{host}}/api/v1/games/1/cards/1
+  body: json
+  auth: none
+}
+
+headers {
+  JDLGroupCode: PTSIJ
+}
+
+body:json {
+  {
+    "content": "Je n'ai jamais codé cett application"
+  }
+}
