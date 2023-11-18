@@ -153,7 +153,15 @@ func (config *Config) GetRandom(w http.ResponseWriter, r *http.Request) {
 	}
 
 	var gameCards []models.GameCard
-	config.Database.Model(&models.GameCard{}).Where("game_id=?", gameID).Order("rand()").Limit(limit).Find(&gameCards)
+
+	modeParam := r.URL.Query().Get("mode")
+	modeParamValue, err := strconv.Atoi(modeParam)
+
+	if err == nil {
+		config.Database.Model(&models.GameMode{ID: uint(modeParamValue)}).Order("rand()").Limit(limit).Association("GameCards").Find(&gameCards)
+	} else {
+		config.Database.Model(&models.GameCard{}).Where("game_id=?", gameID).Order("rand()").Limit(limit).Find(&gameCards)
+	}
 
 	render.JSON(w, r, gameCards)
 }
