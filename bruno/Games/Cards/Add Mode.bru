@@ -1,0 +1,22 @@
+meta {
+  name: Add Mode
+  type: http
+  seq: 5
+}
+
+put {
+  url: {{host}}/api/v1/games/1/cards/1/modeassociation
+  body: json
+  auth: none
+}
+
+headers {
+  JDLGroupCode: PTSIJ
+}
+
+body:json {
+  {
+    "mode_id": 1,
+    "type": "add"
+  }
+}

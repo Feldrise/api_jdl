@@ -26,7 +26,7 @@ func (config *Config) GetAll(w http.ResponseWriter, r *http.Request) {
 	gameID := chi.URLParam(r, "gameid")
 
 	var gameCards []models.GameCard
-	config.Database.Model(&models.GameCard{}).Where("game_id=?", gameID).Find(&gameCards)
+	config.Database.Model(&models.GameCard{}).Preload("GameModes").Where("game_id=?", gameID).Find(&gameCards)
 
 	render.JSON(w, r, gameCards)
 }
@@ -59,7 +59,7 @@ func (config *Config) Create(w http.ResponseWriter, r *http.Request) {
 	var game models.Game
 	config.Database.First(&game, gameID)
 
-	if game.GroupID != *group {
+	if game.ID == 0 || game.GroupID != *group {
 		render.Render(w, r, errors.ErrUnauthorized("this game doesn't belong to your group"))
 		return
 	}
@@ -83,7 +83,7 @@ func (config *Config) Create(w http.ResponseWriter, r *http.Request) {
 // @Tags GameCard
 // @Param id path string true "The id of the card to update"
 // @Param request body GameCardPostPutPayload true "game card's info"
-// @Success 201 {object} GameCard
+// @Success 200 {object} GameCard
 // @Failure 400 {object} ErrResponse
 // @Router /games/{gameid}/cards/{id} [put]
 func (config *Config) Update(w http.ResponseWriter, r *http.Request) {
@@ -127,6 +127,10 @@ func (config *Config) Update(w http.ResponseWriter, r *http.Request) {
 	render.JSON(w, r, gameCard)
 }
 
+// OTHER
+
+// GETTER
+
 // GetGameCardRandom godoc
 //
 // @Summary Get random game cards
@@ -152,4 +156,69 @@ func (config *Config) GetRandom(w http.ResponseWriter, r *http.Request) {
 	config.Database.Model(&models.GameCard{}).Where("game_id=?", gameID).Order("rand()").Limit(limit).Find(&gameCards)
 
 	render.JSON(w, r, gameCards)
+}
+
+// SETTER
+
+// AttachModeToGameCard godoc
+// @Summary attach a mode to a game card
+// @Description Attach a mode to a game card
+// @ID attach-mode-to-game-card
+// @Tags GameCard
+// @Param id path string true "The id of the card to update"
+// @Param request body GameCardModeAssociationPayload true "game mode association's info"
+// @Success 200 {object} GameCard
+// @Failure 400 {object} ErrResponse
+// @Router /games/{gameid}/cards/{id}/modeassociation [put]
+func (config *Config) ModeAssotiation(w http.ResponseWriter, r *http.Request) {
+	// We bind the data
+	data := &models.GameCardModeAssociationPayload{}
+	if err := render.Bind(r, data); err != nil {
+		render.Render(w, r, errors.ErrInvalidRequest(err))
+		return
+	}
+
+	// We check authorization
+	gameID := chi.URLParam(r, "gameid")
+	group := group.ForContext(r.Context())
+	if group == nil {
+		render.Render(w, r, errors.ErrUnauthorized("you must specify the group"))
+		return
+	}
+
+	var game models.Game
+	config.Database.First(&game, gameID)
+
+	if game.GroupID != *group {
+		render.Render(w, r, errors.ErrUnauthorized("this game doesn't belong to your group"))
+		return
+	}
+
+	// we get the card
+	cardID := chi.URLParam(r, "id")
+	var gameCard models.GameCard
+	config.Database.Find(&gameCard, cardID)
+
+	if gameCard.ID == 0 {
+		render.Render(w, r, errors.ErrNotFound())
+		return
+	}
+
+	// we get the mode
+	var mode models.GameMode
+	config.Database.Find(&mode, data.ModeID)
+
+	if mode.ID == 0 || mode.GameID != game.ID {
+		render.Render(w, r, errors.ErrNotFound())
+		return
+	}
+
+	// We update the association
+	if *data.Type == "add" {
+		config.Database.Model(&gameCard).Association("GameModes").Append(&mode)
+	} else if *data.Type == "remove" {
+		config.Database.Model(&gameCard).Association("GameModes").Delete(&mode)
+	}
+
+	render.JSON(w, r, gameCard)
 }

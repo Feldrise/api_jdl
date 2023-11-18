@@ -133,6 +133,32 @@ const docTemplate = `{
                 }
             }
         },
+        "/games/{gameid}/cards/random": {
+            "get": {
+                "tags": [
+                    "GameCard"
+                ],
+                "summary": "Get random game cards",
+                "operationId": "get-game-cards-random",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "array",
+                            "items": {
+                                "$ref": "#/definitions/GameCard"
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/ErrResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/games/{gameid}/cards/{id}": {
             "put": {
                 "description": "Update a game card",
@@ -160,8 +186,50 @@ const docTemplate = `{
                     }
                 ],
                 "responses": {
-                    "201": {
-                        "description": "Created",
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/GameCard"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/ErrResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/games/{gameid}/cards/{id}/modeassociation": {
+            "put": {
+                "description": "Attach a mode to a game card",
+                "tags": [
+                    "GameCard"
+                ],
+                "summary": "attach a mode to a game card",
+                "operationId": "attach-mode-to-game-card",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "The id of the card to update",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "game mode association's info",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/GameCardModeAssociationPayload"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/GameCard"
                         }
@@ -221,6 +289,48 @@ const docTemplate = `{
                 "responses": {
                     "201": {
                         "description": "Created",
+                        "schema": {
+                            "$ref": "#/definitions/GameMode"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/ErrResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/games/{gameid}/modes/{id}": {
+            "put": {
+                "description": "Update a game mode",
+                "tags": [
+                    "GameMode"
+                ],
+                "summary": "update a game mode",
+                "operationId": "update-game-mode",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "The id of the card to update",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "game mode's info",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/GameModePostPutPayload"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/GameMode"
                         }
@@ -378,8 +488,30 @@ const docTemplate = `{
                     "description": "ID of game card",
                     "type": "integer"
                 },
+                "modes": {
+                    "description": "the card's mode",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/GameMode"
+                    }
+                },
                 "updated_at": {
                     "description": "updated time of game card",
+                    "type": "string"
+                }
+            }
+        },
+        "GameCardModeAssociationPayload": {
+            "type": "object",
+            "required": [
+                "mode_id",
+                "type"
+            ],
+            "properties": {
+                "mode_id": {
+                    "type": "integer"
+                },
+                "type": {
                     "type": "string"
                 }
             }
@@ -398,6 +530,13 @@ const docTemplate = `{
         "GameMode": {
             "type": "object",
             "properties": {
+                "cards": {
+                    "description": "the mode's cards",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/GameCard"
+                    }
+                },
                 "created_at": {
                     "description": "creation time of game mode",
                     "type": "string"
@@ -413,13 +552,6 @@ const docTemplate = `{
                 "id": {
                     "description": "ID of game mode",
                     "type": "integer"
-                },
-                "mode_cards": {
-                    "description": "cards of the mode",
-                    "type": "array",
-                    "items": {
-                        "$ref": "#/definitions/ModeCard"
-                    }
                 },
                 "name": {
                     "description": "the mode's name",
@@ -484,35 +616,6 @@ const docTemplate = `{
                 },
                 "updated_at": {
                     "description": "updated time of group",
-                    "type": "string"
-                }
-            }
-        },
-        "ModeCard": {
-            "type": "object",
-            "properties": {
-                "card_id": {
-                    "description": "th ID of the corresponding game card",
-                    "type": "integer"
-                },
-                "created_at": {
-                    "description": "creation time of mode card",
-                    "type": "string"
-                },
-                "deleted_at": {
-                    "description": "deletation time of mode card",
-                    "type": "string"
-                },
-                "game_mode_id": {
-                    "description": "the ID of the mode the card belongs to",
-                    "type": "integer"
-                },
-                "id": {
-                    "description": "ID of mode card",
-                    "type": "integer"
-                },
-                "updated_at": {
-                    "description": "updated time of mode card",
                     "type": "string"
                 }
             }

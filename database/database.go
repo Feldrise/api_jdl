@@ -10,5 +10,4 @@ func Migrate(database *gorm.DB) {
 	database.AutoMigrate(&models.Game{})
 	database.AutoMigrate(&models.GameCard{})
 	database.AutoMigrate(&models.GameMode{})
-	database.AutoMigrate(&models.ModeCard{})
 }

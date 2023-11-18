@@ -14,8 +14,8 @@ type GameMode struct {
 
 	GameID uint `json:"game_id"` // ID of the game the mode belongs to
 
-	Name      string     `json:"name"`                                                             // the mode's name
-	ModeCards []ModeCard `json:"mode_cards"  gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE,"` // cards of the mode
+	Name      string     `json:"name"`                                                                                // the mode's name
+	GameCards []GameCard `json:"cards" gorm:"many2many:gamecard_modes;constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"` // the mode's cards
 } // @name GameMode
 
 type GameModePostPutPayload struct {

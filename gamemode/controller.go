@@ -58,7 +58,7 @@ func (config *Config) Create(w http.ResponseWriter, r *http.Request) {
 	var game models.Game
 	config.Database.First(&game, gameID)
 
-	if game.GroupID != *group {
+	if game.ID == 0 || game.GroupID != *group {
 		render.Render(w, r, errors.ErrUnauthorized("this game doesn't belong to your group"))
 		return
 	}
@@ -73,4 +73,55 @@ func (config *Config) Create(w http.ResponseWriter, r *http.Request) {
 
 	render.Status(r, 201)
 	render.JSON(w, r, gameMode)
+}
+
+// UpdateGameMode godoc
+// @Summary update a game mode
+// @Description Update a game mode
+// @ID update-game-mode
+// @Tags GameMode
+// @Param id path string true "The id of the card to update"
+// @Param request body GameModePostPutPayload true "game mode's info"
+// @Success 200 {object} GameMode
+// @Failure 400 {object} ErrResponse
+// @Router /games/{gameid}/modes/{id} [put]
+func (config *Config) Update(w http.ResponseWriter, r *http.Request) {
+	// We bind the data
+	data := &models.GameModePostPutPayload{}
+	if err := render.Bind(r, data); err != nil {
+		render.Render(w, r, errors.ErrInvalidRequest(err))
+		return
+	}
+
+	// We check authorization
+	gameID := chi.URLParam(r, "gameid")
+	group := group.ForContext(r.Context())
+	if group == nil {
+		render.Render(w, r, errors.ErrUnauthorized("you must specify the group"))
+		return
+	}
+
+	var game models.Game
+	config.Database.First(&game, gameID)
+
+	if game.GroupID != *group {
+		render.Render(w, r, errors.ErrUnauthorized("this game doesn't belong to your group"))
+		return
+	}
+
+	// we get the mode
+	modeID := chi.URLParam(r, "id")
+	var mode models.GameMode
+	config.Database.Find(&mode, modeID)
+
+	if mode.ID == 0 {
+		render.Render(w, r, errors.ErrNotFound())
+		return
+	}
+
+	mode.Name = *data.Name
+
+	config.Database.Save(mode)
+
+	render.JSON(w, r, mode)
 }

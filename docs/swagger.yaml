@@ -62,9 +62,24 @@ definitions:
       id:
         description: ID of game card
         type: integer
+      modes:
+        description: the card's mode
+        items:
+          $ref: '#/definitions/GameMode'
+        type: array
       updated_at:
         description: updated time of game card
         type: string
+    type: object
+  GameCardModeAssociationPayload:
+    properties:
+      mode_id:
+        type: integer
+      type:
+        type: string
+    required:
+    - mode_id
+    - type
     type: object
   GameCardPostPutPayload:
     properties:
@@ -75,6 +90,11 @@ definitions:
     type: object
   GameMode:
     properties:
+      cards:
+        description: the mode's cards
+        items:
+          $ref: '#/definitions/GameCard'
+        type: array
       created_at:
         description: creation time of game mode
         type: string
@@ -87,11 +107,6 @@ definitions:
       id:
         description: ID of game mode
         type: integer
-      mode_cards:
-        description: cards of the mode
-        items:
-          $ref: '#/definitions/ModeCard'
-        type: array
       name:
         description: the mode's name
         type: string
@@ -137,27 +152,6 @@ definitions:
         type: string
       updated_at:
         description: updated time of group
-        type: string
-    type: object
-  ModeCard:
-    properties:
-      card_id:
-        description: th ID of the corresponding game card
-        type: integer
-      created_at:
-        description: creation time of mode card
-        type: string
-      deleted_at:
-        description: deletation time of mode card
-        type: string
-      game_mode_id:
-        description: the ID of the mode the card belongs to
-        type: integer
-      id:
-        description: ID of mode card
-        type: integer
-      updated_at:
-        description: updated time of mode card
         type: string
     type: object
 info:
@@ -259,8 +253,8 @@ paths:
         schema:
           $ref: '#/definitions/GameCardPostPutPayload'
       responses:
-        "201":
-          description: Created
+        "200":
+          description: OK
           schema:
             $ref: '#/definitions/GameCard'
         "400":
@@ -268,6 +262,51 @@ paths:
           schema:
             $ref: '#/definitions/ErrResponse'
       summary: update a game card
+      tags:
+      - GameCard
+  /games/{gameid}/cards/{id}/modeassociation:
+    put:
+      description: Attach a mode to a game card
+      operationId: attach-mode-to-game-card
+      parameters:
+      - description: The id of the card to update
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: game mode association's info
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/GameCardModeAssociationPayload'
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/GameCard'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/ErrResponse'
+      summary: attach a mode to a game card
+      tags:
+      - GameCard
+  /games/{gameid}/cards/random:
+    get:
+      operationId: get-game-cards-random
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/GameCard'
+            type: array
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/ErrResponse'
+      summary: Get random game cards
       tags:
       - GameCard
   /games/{gameid}/modes/:
@@ -307,6 +346,34 @@ paths:
           schema:
             $ref: '#/definitions/ErrResponse'
       summary: Create a game mode
+      tags:
+      - GameMode
+  /games/{gameid}/modes/{id}:
+    put:
+      description: Update a game mode
+      operationId: update-game-mode
+      parameters:
+      - description: The id of the card to update
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: game mode's info
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/GameModePostPutPayload'
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/GameMode'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/ErrResponse'
+      summary: update a game mode
       tags:
       - GameMode
   /games/{id}:
