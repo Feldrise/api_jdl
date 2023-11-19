@@ -15,11 +15,18 @@ type GameCard struct {
 	GameID uint `json:"game_id"` // the id of the game the card belongs to
 
 	Content   string     `json:"content"`                                                                             // the card's content
+	Type      *string    `json:"type"`                                                                                // the card's type, mostly used for "truth or dare"
 	GameModes []GameMode `json:"modes" gorm:"many2many:gamecard_modes;constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"` // the card's mode
 } // @name GameCard
 
+type TruthOrDareCards struct {
+	TruthCards []GameCard `json:"truth_cards"` // truth cards
+	DareCards  []GameCard `json:"dare_cards"`  // dare cards
+} // @name TruthOrDareCards
+
 type GameCardPostPutPayload struct {
-	Content *string `json:"content" validate:"required"`
+	Content *string `json:"content" validate:"required"` // the card's content
+	Type    *string `json:"type"`                        // the card's type, mostly used for "truth or dare"
 } // @name GameCardPostPutPayload
 
 func (g *GameCardPostPutPayload) Bind(r *http.Request) error {

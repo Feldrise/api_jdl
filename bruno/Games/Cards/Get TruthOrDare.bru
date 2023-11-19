@@ -1,18 +1,18 @@
 meta {
-  name: Get Random
+  name: Get TruthOrDare
   type: http
-  seq: 4
+  seq: 7
 }
 
 get {
-  url: {{host}}/api/v1/games/1/cards/random?limit=20&mode=3
+  url: {{host}}/api/v1/games/3/cards/truthordare?limit=20&mode=5
   body: json
   auth: none
 }
 
 query {
   limit: 20
-  mode: 3
+  mode: 5
 }
 
 headers {

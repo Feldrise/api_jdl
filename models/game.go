@@ -34,7 +34,7 @@ func (g *GamePostPayload) Bind(r *http.Request) error {
 		return errors.New("missing required type property")
 	}
 
-	if *g.Type != "cards" {
+	if *g.Type != "cards" && *g.Type != "truthordare" {
 		return errors.New("type is not a valide type")
 	}
 

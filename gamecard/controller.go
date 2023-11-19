@@ -68,6 +68,7 @@ func (config *Config) Create(w http.ResponseWriter, r *http.Request) {
 	gameCard := models.GameCard{
 		GameID:  game.ID,
 		Content: *data.Content,
+		Type:    data.Type,
 	}
 
 	config.Database.Create(&gameCard)
@@ -122,6 +123,10 @@ func (config *Config) Update(w http.ResponseWriter, r *http.Request) {
 
 	gameCard.Content = *data.Content
 
+	if data.Type != nil {
+		gameCard.Type = data.Type
+	}
+
 	config.Database.Save(gameCard)
 
 	render.JSON(w, r, gameCard)
@@ -164,6 +169,47 @@ func (config *Config) GetRandom(w http.ResponseWriter, r *http.Request) {
 	}
 
 	render.JSON(w, r, gameCards)
+}
+
+// GetTruthOrDareCards godoc
+//
+// @Summary Get truth or dare game cards
+// @Descripton Get truth or dare game cards
+// @ID get-truth-or-dare-cards
+// @Tags GameCard
+// @Success 200 {object} TruthOrDareCards
+// @Failure 404 {object} ErrResponse
+// @Router /games/{gameid}/cards/truthordare [get]
+func (config *Config) GetTruthOrDareCards(w http.ResponseWriter, r *http.Request) {
+	gameID := chi.URLParam(r, "gameid")
+
+	limitParam := r.URL.Query().Get("limit")
+	limit := 20
+
+	limitParamValue, err := strconv.Atoi(limitParam)
+
+	if err == nil {
+		limit = limitParamValue
+	}
+
+	var truthCards []models.GameCard
+	var dareCards []models.GameCard
+
+	modeParam := r.URL.Query().Get("mode")
+	modeParamValue, err := strconv.Atoi(modeParam)
+
+	if err == nil {
+		config.Database.Model(&models.GameMode{ID: uint(modeParamValue)}).Order("rand()").Limit(limit).Association("GameCards").Find(&truthCards, "type=?", "truth")
+		config.Database.Model(&models.GameMode{ID: uint(modeParamValue)}).Order("rand()").Limit(limit).Association("GameCards").Find(&dareCards, "type=?", "dare")
+	} else {
+		config.Database.Model(&models.GameCard{}).Where("game_id=?", gameID).Order("rand()").Limit(limit).Find(&truthCards, "type=?", "truth")
+		config.Database.Model(&models.GameCard{}).Where("game_id=?", gameID).Order("rand()").Limit(limit).Find(&dareCards, "type=?", "dare")
+	}
+
+	render.JSON(w, r, &models.TruthOrDareCards{
+		TruthCards: truthCards,
+		DareCards:  dareCards,
+	})
 }
 
 // SETTER

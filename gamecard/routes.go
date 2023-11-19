@@ -14,6 +14,7 @@ func (config *Config) Routes() *chi.Mux {
 
 	router.Get("/", config.GetAll)
 	router.Get("/random", config.GetRandom)
+	router.Get("/truthordare", config.GetTruthOrDareCards)
 	router.Post("/", config.Create)
 	router.Put("/{id}", config.Update)
 	router.Put("/{id}/modeassociation", config.ModeAssotiation)

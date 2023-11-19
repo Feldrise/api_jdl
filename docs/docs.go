@@ -159,6 +159,29 @@ const docTemplate = `{
                 }
             }
         },
+        "/games/{gameid}/cards/truthordare": {
+            "get": {
+                "tags": [
+                    "GameCard"
+                ],
+                "summary": "Get truth or dare game cards",
+                "operationId": "get-truth-or-dare-cards",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/TruthOrDareCards"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/ErrResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/games/{gameid}/cards/{id}": {
             "put": {
                 "description": "Update a game card",
@@ -495,6 +518,10 @@ const docTemplate = `{
                         "$ref": "#/definitions/GameMode"
                     }
                 },
+                "type": {
+                    "description": "the card's type, mostly used for \"truth or dare\"",
+                    "type": "string"
+                },
                 "updated_at": {
                     "description": "updated time of game card",
                     "type": "string"
@@ -523,6 +550,11 @@ const docTemplate = `{
             ],
             "properties": {
                 "content": {
+                    "description": "the card's content",
+                    "type": "string"
+                },
+                "type": {
+                    "description": "the card's type, mostly used for \"truth or dare\"",
                     "type": "string"
                 }
             }
@@ -617,6 +649,25 @@ const docTemplate = `{
                 "updated_at": {
                     "description": "updated time of group",
                     "type": "string"
+                }
+            }
+        },
+        "TruthOrDareCards": {
+            "type": "object",
+            "properties": {
+                "dare_cards": {
+                    "description": "dare cards",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/GameCard"
+                    }
+                },
+                "truth_cards": {
+                    "description": "truth cards",
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/GameCard"
+                    }
                 }
             }
         }
